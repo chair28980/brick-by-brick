@@ -360,7 +360,9 @@ a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  @apply focus-gaming;
+  outline: 2px solid var(--gaming-purple);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* Loading state */

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { hardhat } from "viem/chains";
@@ -20,7 +19,6 @@ export const menuLinks: HeaderMenuLink[] = [
     label: "Home",
     href: "/",
   },
-
   {
     label: "Debug Contracts",
     href: "/debug",
@@ -37,13 +35,7 @@ export const HeaderMenuLinks = () => {
         const isActive = pathname === href;
         return (
           <li key={href}>
-            <Link
-              href={href}
-              passHref
-              className={`${
-                isActive ? "bg-secondary shadow-md" : ""
-              } hover:bg-secondary hover:shadow-md focus:!bg-secondary active:!text-neutral py-1.5 px-3 text-sm rounded-full gap-2 grid grid-flow-col`}
-            >
+            <Link href={href} passHref className={`header-nav-link ${isActive ? "active" : ""}`}>
               {icon}
               <span>{label}</span>
             </Link>
@@ -67,38 +59,241 @@ export const Header = () => {
   });
 
   return (
-    <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 shrink-0 justify-between z-20 shadow-md shadow-secondary px-0 sm:px-2">
-      <div className="navbar-start w-auto lg:w-1/2">
-        <details className="dropdown" ref={burgerMenuRef}>
-          <summary className="ml-1 btn btn-ghost lg:hidden hover:bg-transparent">
-            <Bars3Icon className="h-1/2" />
-          </summary>
-          <ul
-            className="menu menu-compact dropdown-content mt-3 p-2 shadow-sm bg-base-100 rounded-box w-52"
-            onClick={() => {
-              burgerMenuRef?.current?.removeAttribute("open");
-            }}
-          >
-            <HeaderMenuLinks />
-          </ul>
-        </details>
-        <Link href="/" passHref className="hidden lg:flex items-center gap-2 ml-4 mr-6 shrink-0">
-          <div className="flex relative w-10 h-10">
-            <Image alt="SE2 logo" className="cursor-pointer" fill src="/logo.svg" />
+    <>
+      <div className="gaming-header">
+        <div className="header-content">
+          {/* Mobile menu */}
+          <details className="mobile-menu" ref={burgerMenuRef}>
+            <summary className="mobile-menu-trigger">
+              <Bars3Icon className="h-6 w-6" />
+            </summary>
+            <ul className="mobile-menu-dropdown">
+              <HeaderMenuLinks />
+            </ul>
+          </details>
+
+          {/* Logo */}
+          <Link href="/" className="header-logo">
+            <div className="logo-container">
+              <div className="logo-icon">🧱</div>
+              <div className="logo-text">
+                <span className="logo-title">Build the Wall</span>
+                <span className="logo-subtitle">Decentralized Building</span>
+              </div>
+            </div>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="desktop-nav">
+            <ul className="nav-links">
+              <HeaderMenuLinks />
+            </ul>
+          </nav>
+
+          {/* CTA Section */}
+          <div className="header-cta">
+            <RainbowKitCustomConnectButton />
+            {isLocalNetwork && <FaucetButton />}
           </div>
-          <div className="flex flex-col">
-            <span className="font-bold leading-tight">Scaffold-ETH</span>
-            <span className="text-xs">Ethereum dev stack</span>
-          </div>
-        </Link>
-        <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">
-          <HeaderMenuLinks />
-        </ul>
+        </div>
       </div>
-      <div className="navbar-end grow mr-4">
-        <RainbowKitCustomConnectButton />
-        {isLocalNetwork && <FaucetButton />}
-      </div>
-    </div>
+
+      {/* Header Styles */}
+      <style jsx>{`
+        .gaming-header {
+          position: sticky;
+          top: 0;
+          z-index: 50;
+          background: rgba(74, 155, 142, 0.95);
+          backdrop-filter: blur(10px);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 1rem;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 70px;
+        }
+
+        .mobile-menu {
+          display: none;
+        }
+
+        .mobile-menu-trigger {
+          background: none;
+          border: none;
+          color: white;
+          cursor: pointer;
+          padding: 0.5rem;
+          border-radius: 8px;
+          transition: background-color 0.2s ease;
+        }
+
+        .mobile-menu-trigger:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-menu-dropdown {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: rgba(74, 155, 142, 0.98);
+          backdrop-filter: blur(10px);
+          border-radius: 0 0 15px 15px;
+          padding: 1rem;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+          list-style: none;
+          margin: 0;
+        }
+
+        .header-logo {
+          text-decoration: none;
+          color: inherit;
+        }
+
+        .logo-container {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .logo-icon {
+          font-size: 2rem;
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .logo-text {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .logo-title {
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: white;
+          line-height: 1.2;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-subtitle {
+          font-size: 0.75rem;
+          color: rgba(255, 255, 255, 0.8);
+          line-height: 1;
+        }
+
+        .desktop-nav {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+        }
+
+        .nav-links {
+          display: flex;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          gap: 1rem;
+        }
+
+        .header-nav-link {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.75rem 1.5rem;
+          color: rgba(255, 255, 255, 0.9);
+          text-decoration: none;
+          border-radius: 25px;
+          font-weight: 500;
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .header-nav-link::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(45deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.2));
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          border-radius: 25px;
+        }
+
+        .header-nav-link:hover::before,
+        .header-nav-link.active::before {
+          opacity: 1;
+        }
+
+        .header-nav-link:hover {
+          color: white;
+          transform: translateY(-1px);
+        }
+
+        .header-nav-link.active {
+          color: white;
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .header-cta {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+          .mobile-menu {
+            display: block;
+            position: relative;
+          }
+
+          .desktop-nav {
+            display: none;
+          }
+
+          .logo-text {
+            display: none;
+          }
+
+          .header-content {
+            padding: 0 1rem;
+          }
+
+          .header-nav-link {
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            width: 100%;
+            justify-content: flex-start;
+          }
+
+          .mobile-menu-dropdown .header-nav-link {
+            margin-bottom: 0.5rem;
+          }
+
+          .mobile-menu-dropdown .header-nav-link:last-child {
+            margin-bottom: 0;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .header-content {
+            height: 60px;
+          }
+
+          .logo-icon {
+            font-size: 1.5rem;
+          }
+        }
+      `}</style>
+    </>
   );
 };

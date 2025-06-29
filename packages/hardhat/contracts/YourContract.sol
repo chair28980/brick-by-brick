@@ -8,8 +8,7 @@ import "hardhat/console.sol";
 // import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
- * A smart contract that allows changing a state variable of the contract and tracking the changes
- * It also allows the owner to withdraw the Ether in the contract
+ * A smart contract that allows users to sign a guestbook and build a wall brick by brick
  * @author BuidlGuidl
  */
 contract YourContract {
@@ -19,9 +18,15 @@ contract YourContract {
     bool public premium = false;
     uint256 public totalCounter = 0;
     mapping(address => uint) public userGreetingCounter;
+    
+    // Guestbook functionality
+    address[] public builders;
+    mapping(address => bool) public hasSigned;
+    uint256 public totalBricks = 0;
 
     // Events: a way to emit log statements from smart contract that can be listened to by external parties
     event GreetingChange(address indexed greetingSetter, string newGreeting, bool premium, uint256 value);
+    event GuestbookSigned(address indexed signer, uint256 totalBricks);
 
     // Constructor: Called once on contract deployment
     // Check packages/hardhat/deploy/00_deploy_your_contract.ts
@@ -35,6 +40,47 @@ contract YourContract {
         // msg.sender: predefined variable that represents address of the account that called the current function
         require(msg.sender == owner, "Not the Owner");
         _;
+    }
+
+    /**
+     * Function that allows users to sign the guestbook
+     * Each unique address adds a brick to the wall
+     */
+    function signGuestbook() public {
+        // Check if user has already signed
+        require(!hasSigned[msg.sender], "You have already signed the guestbook!");
+        
+        // Mark as signed and add to builders array
+        hasSigned[msg.sender] = true;
+        builders.push(msg.sender);
+        totalBricks += 1;
+        
+        // Print to console for debugging
+        console.log("New builder signed: %s, Total bricks: %d", msg.sender, totalBricks);
+        
+        // Emit event
+        emit GuestbookSigned(msg.sender, totalBricks);
+    }
+
+    /**
+     * Function to get the total number of builders (unique signers)
+     */
+    function getTotalBuilders() public view returns (uint256) {
+        return builders.length;
+    }
+
+    /**
+     * Function to get all builders (addresses that have signed)
+     */
+    function getAllBuilders() public view returns (address[] memory) {
+        return builders;
+    }
+
+    /**
+     * Function to check if an address has signed the guestbook
+     */
+    function hasAddressSigned(address _address) public view returns (bool) {
+        return hasSigned[_address];
     }
 
     /**

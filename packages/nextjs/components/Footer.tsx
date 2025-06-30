@@ -13,13 +13,16 @@ export const Footer = () => {
   const isLocalNetwork = targetNetwork.id === hardhat.id;
 
   return (
-    <footer className="bg-gray-100 border-t p-4 mt-auto">
+    <footer className="bg-base-100 border-t border-base-300 p-4 mt-auto">
       <div className="max-w-6xl mx-auto flex justify-between items-center">
         <div className="flex gap-2">
           {isLocalNetwork && (
             <>
               <Faucet />
-              <Link href="/blockexplorer" className="text-blue-500 hover:underline">
+              <Link
+                href="/blockexplorer"
+                className="text-primary hover:text-primary-focus hover:underline transition-colors"
+              >
                 Block Explorer
               </Link>
             </>

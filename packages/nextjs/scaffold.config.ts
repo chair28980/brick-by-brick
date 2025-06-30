@@ -11,9 +11,35 @@ export type ScaffoldConfig = {
 
 export const DEFAULT_ALCHEMY_API_KEY = "oKxs-03sij-U_N0iOlrSsZFr29-IqbuF";
 
+// Define custom Status Network Sepolia chain
+const statusNetworkSepolia = {
+  id: 1660990954 as const,
+  name: "Status Network Sepolia",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://public.sepolia.rpc.status.network"],
+    },
+    public: {
+      http: ["https://public.sepolia.rpc.status.network"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "Status Sepolia Scan",
+      url: "https://sepoliascan.status.network",
+    },
+  },
+  testnet: true,
+} as const satisfies chains.Chain;
+
 const scaffoldConfig = {
   // The networks on which your DApp is live
-  targetNetworks: [chains.sepolia],
+  targetNetworks: [statusNetworkSepolia],
 
   // The interval at which your front-end polls the RPC servers for new data
   // it has no effect if you only target the local network (default is 4000)
@@ -28,8 +54,7 @@ const scaffoldConfig = {
   // If you want to use a different RPC for a specific network, you can add it here.
   // The key is the chain ID, and the value is the HTTP RPC URL
   rpcOverrides: {
-    // Example:
-    // [chains.mainnet.id]: "https://mainnet.buidlguidl.com",
+    [statusNetworkSepolia.id]: "https://public.sepolia.rpc.status.network",
   },
 
   // This is ours WalletConnect's default project ID.

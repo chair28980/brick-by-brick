@@ -36,7 +36,7 @@ const Home: NextPage = () => {
       {/* Header Section */}
       <div className="bg-base-100 shadow-sm border-b border-base-300">
         <div className="max-w-6xl mx-auto p-6">
-          <h1 className="text-3xl font-bold text-center mb-6 text-base-content">Build the Wall</h1>
+          <h1 className="text-3xl font-bold text-center mb-6 text-base-content">Brick by Brick</h1>
 
           <div className="flex justify-center items-center gap-8 mb-6">
             <div className="text-center">
